@@ -1,3 +1,4 @@
+let token = '';
 function consultarRestaurantes() {
     alert("teste")
     $.ajax({
@@ -11,17 +12,15 @@ function consultarRestaurantes() {
 }
 
 function login() {
-    const json = '{"email":"josemariazumira+joseGER@gmail.com", "senha": "1234"}';
+    const json = '{"email":"", "senha": ""}';
     const data = JSON.parse(json);
-
-    console.log(JSON.stringify(data))
-    alert("teste")
     $.ajax({
         url: "http://localhost:8080/login",
         type: "post",
         data: JSON.stringify(data),
         success: function (response) {
-            $("#conteudo").text(JSON.stringify(response.token));
+            token = response.token;
+            $("#conteudo").text(token);
         }
     });
 }
@@ -38,4 +37,34 @@ function endpoints() {
     });
 }
 
-$('#botao').click(login)
+function loginHeroku() {
+    const json = '{"email":"", "senha": ""}';
+    const data = JSON.parse(json);
+        
+    $.ajax({
+        url: "https://ejs-algafood.herokuapp.com/login",
+        type: "post",
+        data: JSON.stringify(data),
+        success: function (response) {
+            $("#conteudo").text(JSON.stringify(response.token));
+            token = response.token;
+            // listaUsuarios(token);
+        }
+    });
+
+}
+
+function listaUsuarios() {
+    $.ajax({
+        url: "https://ejs-algafood.herokuapp.com/usuarios",
+        type: "get",
+        headers: {"Authorization": "Bearer " + token},
+        success: function (response) {
+            $("#conteudo").text(JSON.stringify(response._embedded.usuários));
+        }
+    });
+}
+
+
+$('#botao').click(loginHeroku)
+$('#botaoUsuario').click(listaUsuarios)
