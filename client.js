@@ -69,7 +69,7 @@ function listaUsuarios() {
     $.ajax({
         url: requestTo,
         type: "get",
-        headers: {"Authorization": "Bearer " + token},
+        headers: {Authorization : "Bearer " + token},
         success: function (response) {
             $("#conteudo").text(JSON.stringify(response._embedded.usuários));
             limpar()
